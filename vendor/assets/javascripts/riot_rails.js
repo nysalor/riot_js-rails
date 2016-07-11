@@ -40,8 +40,13 @@
     var unmountEvent;
 
     if (Turbolinks.EVENTS) {
+      mountEvent = Turbolinks.EVENTS.CHANGE;	
       unmountEvent = Turbolinks.EVENTS.BEFORE_UNLOAD;
+    } else if (typeof Turbolinks.controller !== "undefined") {
+      mountEvent = 'turbolinks:load';
+      unmountEvent = 'turbolinks:before-cache';
     } else {
+      mountEvent = 'page:change';
       unmountEvent = 'page:receive';
       Turbolinks.pagesCached(0);
 
@@ -50,7 +55,7 @@
       }
     }
 
-    $(document).on('page:change', function(){
+    $(document).on(mountEvent, function(){
       riotRails.mountAll();
     });
 
